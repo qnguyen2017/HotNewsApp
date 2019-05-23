@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Text, View, Button, TextInput} from 'react-native';
+import { View, FlatList, Button, TextInput} from 'react-native';
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
-import {Icon} from 'react-native-elements'
+import {Icon, Text, ListItem} from 'react-native-elements'
 
 const styles = {
   screen : {
@@ -19,23 +19,31 @@ class HomeScreen extends React.Component {
     title: 'Home'
   }
   
+  constructor(props){
+    super(props)
+    this.state = {
+      data: []
+    }
+  }
+
+  componentWillMount(){
+    fetch('https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=2da837dbc4a04db985d2867b91c9962c')
+    .then(resp => resp.json())
+    .then(data => this.setState({data : data.articles}))
+  }
+
   render() {
     const {navigate} = this.props.navigation;
+    console.log(this.state.data)
     return (
       <View style={styles.screen}>
-        <Text>Welcome to Home</Text>       
-        <Icon
-  raised
-  name='heartbeat'
-  type='font-awesome'
-  color='#f50'
-  onPress={() => console.log('hello')} />
-  <Icon
-  reverse
-  name='ios-american-football'
-  type='ionicon'
-  color='#517fa4'
-/>
+        {
+          this.state.data.map((item, i) => 
+            <Text>
+               {item.title}</Text>
+            
+          )
+        }
       </View>
     );
   }
